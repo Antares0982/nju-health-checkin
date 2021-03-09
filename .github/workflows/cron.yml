@@ -5,6 +5,13 @@ on:
     # 9:00 am UTC+8
     - cron:  '0 1 * * *'
   workflow_dispatch:
+    inputs:
+      user:
+        description: 'NJU ID'
+        required: true
+      pass:
+        description: 'NJU Password'
+        required: true
 
 jobs:
   checkin:
@@ -19,9 +26,18 @@ jobs:
       run: |
         python -m pip install -r requirements.txt
 
-    - name: Run Script
+    - name: Run Script (scheduled)
+      if: ${{ github.event_name == 'schedule' }}
       run: |
         python checkin.py
       env:
         NJU_USER: ${{ secrets.NJU_USER }}
         NJU_PASS: ${{ secrets.NJU_PASS }}
+
+    - name: Run Script (manually)
+      if: ${{ github.event_name == 'workflow_dispatch' }}
+      run: |
+        python checkin.py
+      env:
+        NJU_USER: ${{ github.event.inputs.user }}
+        NJU_PASS: ${{ github.event.inputs.pass }}
