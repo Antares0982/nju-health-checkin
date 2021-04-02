@@ -30,8 +30,7 @@ jobs:
       id: run_scheduled
       if: ${{ github.event_name == 'schedule' }}
       run: |
-        echo -ne "::set-output name=message::"
-        python checkin.py
+        bash run.sh
       env:
         NJU_USER: ${{ secrets.NJU_USER }}
         NJU_PASS: ${{ secrets.NJU_PASS }}
@@ -40,8 +39,7 @@ jobs:
       id: run_manually
       if: ${{ github.event_name == 'workflow_dispatch' }}
       run: |
-        echo -ne "::set-output name=message::"
-        python checkin.py
+        bash run.sh
       env:
         NJU_USER: ${{ github.event.inputs.user }}
         NJU_PASS: ${{ github.event.inputs.pass }}
