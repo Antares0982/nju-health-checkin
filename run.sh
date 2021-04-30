@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 RESULT=$(python checkin.py)
 
 echo "$RESULT"
