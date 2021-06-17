@@ -38,7 +38,7 @@ def main():
         'username': username,
         'password': encryptAES(password, soup.select_one("#pwdDefaultEncryptSalt").attrs['value']),
         'lt': soup.select_one('[name="lt"]').attrs['value'],
-        'dllt': soup.select_one('[name="dllt"]').attrs['value'],
+        'dllt': "userNamePasswordLogin",
         'execution': soup.select_one('[name="execution"]').attrs['value'],
         '_eventId': soup.select_one('[name="_eventId"]').attrs['value'],
         'rmShown': soup.select_one('[name="rmShown"]').attrs['value'],
