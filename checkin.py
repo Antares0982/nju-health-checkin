@@ -11,16 +11,6 @@ from Crypto.Util import Padding
 from bs4 import BeautifulSoup
 
 
-class JsonDict(dict):
-    """general json object that allows attributes to be bound to and also behaves like a dict"""
-
-    def __getattr__(self, attr):
-        return self.get(attr)
-
-    def __setattr__(self, attr, value):
-        self[attr] = value
-
-
 def main():
     def encryptAES(_p0: str, _p1: str) -> str:
         _chars = list('ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678')
@@ -73,8 +63,8 @@ def main():
     result = session.get('http://ehallapp.nju.edu.cn/xgfw/sys/yqfxmrjkdkappnju/apply/saveApplyInfos.do?' +
                          '&'.join([key + '=' + data[key] for key in fields]))
 
-    answer = json.loads(result.text, object_hook=JsonDict)
-    answer.data.location = data['CURR_LOCATION']
+    answer = json.loads(result.text)
+    answer['location'] = data['CURR_LOCATION']
     print(answer)
 
     if result.status_code != 200:
