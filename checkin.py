@@ -19,7 +19,8 @@ def main():
             return ''.join(random.choices(_chars, k=len))
 
         def _gas(data: str, key0: str, iv0: str) -> bytes:
-            encrypt = AES.new(key0.strip().encode('utf-8'), AES.MODE_CBC, iv0.encode('utf-8'))
+            encrypt = AES.new(key0.strip().encode('utf-8'),
+                              AES.MODE_CBC, iv0.encode('utf-8'))
             return base64.b64encode(encrypt.encrypt(Padding.pad(data.encode('utf-8'), 16)))
         return _gas(_rds(64) + _p0, _p1, _rds(16)).decode('utf-8')
 
@@ -62,7 +63,10 @@ def main():
     result = session.get('http://ehallapp.nju.edu.cn/xgfw/sys/yqfxmrjkdkappnju/apply/saveApplyInfos.do?' +
                          '&'.join([key + '=' + data[key] for key in fields]))
 
-    print(result.text)
+    answer = json.loads(result.text)
+    answer['location'] = data['CURR_LOCATION']
+    print(answer)
+
     if result.status_code != 200:
         exit(1)
 
