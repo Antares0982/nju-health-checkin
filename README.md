@@ -3,20 +3,19 @@
 ## Usage
 
 ```
-python -m pip install -r requirements.txt
-NJU_USER=xxx NJU_PASS=xxx python checkin.py
+python3 -m pip install -r requirements.txt
+NJU_USER=xxx NJU_PASS=xxx python3 checkin.py
 ```
 
-## Github Actions
+## Crontab
 
-1. Set `NJU_USER` and `NJU_PASS` in settings/secrets.
+```crontab
+0 21 * * * NJU_USER=xxx NJU_PASS=xxx /usr/bin/python3 checkin.py
+```
 
-2. (Optional) Set `TELEGRAM_TOKEN` and `TELEGRAM_TO` secrets. [(appleboy/telegram-action)](https://github.com/appleboy/telegram-action#secrets)
-
-- The job will be automatically executed at 9:00 am UTC+8 (may be delayed up to 1 hour due to GitHub's issues with cron actions).
-
-- You can also trigger the job and set `NJU_USER` and `NJU_PASS` manually by using `workflow_dispatch`.
+Github action is not stable and not used in this fork any more.
 
 ## Credits
 
 - [checkin.py](checkin.py) is written by [Maxwell Lyu](https://github.com/Maxwell-Lyu).
+

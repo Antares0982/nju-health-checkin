@@ -1,14 +1,21 @@
 # NJU Health Checkin Script
 # Copyright (C) 2021 Maxwell Lyu https://github.com/Maxwell-Lyu
+'''
+Filename: checkin.py
+Edited by: antares0982@gmail.com
+Edit Date: Monday, December 13th 2021, 3:34:23 pm
+'''
 
-import os
-import json
-import random
+
 import base64
+import json
+import os
+import random
+
 import requests
+from bs4 import BeautifulSoup
 from Crypto.Cipher import AES
 from Crypto.Util import Padding
-from bs4 import BeautifulSoup
 
 
 def main():
@@ -22,13 +29,19 @@ def main():
             encrypt = AES.new(key0.strip().encode('utf-8'),
                               AES.MODE_CBC, iv0.encode('utf-8'))
             return base64.b64encode(encrypt.encrypt(Padding.pad(data.encode('utf-8'), 16)))
+
         return _gas(_rds(64) + _p0, _p1, _rds(16)).decode('utf-8')
 
     username = os.environ['NJU_USER']
     password = os.environ['NJU_PASS']
+
+    try:
+        location = os.environ['NJU_CHECKIN_LOCATION']
+    except KeyError:
+        location = None
+
     url_login = r'https://authserver.nju.edu.cn/authserver/login'
     url_list = r'http://ehallapp.nju.edu.cn/xgfw/sys/yqfxmrjkdkappnju/apply/getApplyInfoList.do'
-    url_apply = r'http://ehallapp.nju.edu.cn/xgfw/sys/yqfxmrjkdkappnju/apply/saveApplyInfos.do'
     session = requests.Session()
 
     # login
@@ -60,6 +73,10 @@ def main():
         'JRSKMYS',
         'JZRJRSKMYS'
     ]
+
+    if location is not None:
+        data['CURR_LOCATION'] = location
+
     result = session.get('http://ehallapp.nju.edu.cn/xgfw/sys/yqfxmrjkdkappnju/apply/saveApplyInfos.do?' +
                          '&'.join([key + '=' + data[key] for key in fields]))
 
@@ -68,7 +85,7 @@ def main():
     print(answer)
 
     if result.status_code != 200:
-        exit(1)
+        print(f"Checkin failed with status code {result.status_code}")
 
 
 main()

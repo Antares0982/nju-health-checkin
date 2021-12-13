@@ -2,9 +2,10 @@
 
 set -e
 
-RESULT=$(python checkin.py)
+RESULT=$(python3 checkin.py)
 
 echo "$RESULT"
 
 # for telegram message
-echo "::set-output name=message::${RESULT}"
+
+curl -s "https://api.telegram.org/bot${token}/sendMessage?chat_id=${tgid}&text=${RESULT}"
