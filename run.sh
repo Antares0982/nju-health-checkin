@@ -2,10 +2,17 @@
 
 set -e
 
-RESULT=$(python3 checkin.py)
+shell_dir=$(dirname $(readlink -f "$0"))
+
+RESULT=$(TO_HTML=1 python3 $shell_dir/checkin.py)
 
 echo "$RESULT"
 
+if [[ -z $bottoken && -z $tgid ]]; then
+    echo "no tgid or bot token"
+    exit
+fi
+
 # for telegram message
 
-curl -s "https://api.telegram.org/bot${token}/sendMessage?chat_id=${tgid}&text=${RESULT}"
+curl -s "https://api.telegram.org/bot${bottoken}/sendMessage?chat_id=${tgid}&text=${RESULT}"
