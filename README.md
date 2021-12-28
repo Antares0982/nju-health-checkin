@@ -17,13 +17,13 @@ This script provides features of sending checkin info using telegram-bot, and ma
 `crontab -e` and write:
 
 ```crontab
-0 21 * * * /usr/bin/env bottoken=xxx tgid=yyy bash run.sh # run at 9pm everyday
+0 21 * * * /usr/bin/env http_proxy=url:port https_proxy=url:port bottoken=xxx tgid=yyy bash run.sh # run at 9pm everyday
 ```
 
 Note:
 
-* Complete your own `config.ini` file. If always use the location in the last checkin, just left `location` blank.
-* If you do not use telegram bot, just write `/usr/bin/env bash run.sh` in crontab.
+* Complete your own `config.ini` file. If **always use the location in the last checkin**, just left `location` blank. If checkin requests do not use proxy, left `proxy` blank in config. Otherwise specify the proxy url and port exlicitly in config.ini (checkin.py ignores proxy setting in env!)
+* If you **do not use telegram bot**, just write `/usr/bin/env bash run.sh` in crontab.
 
 ## Contributions
 
