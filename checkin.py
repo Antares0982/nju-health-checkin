@@ -37,7 +37,7 @@ def encryptAES(_p0: str, _p1: str) -> str:
     return _gas(_rds(64) + _p0, _p1, _rds(16)).decode("utf-8")
 
 
-def to_shell_html(s: str) -> str:
+def to_shell_urltext(s: str) -> str:
     s = "%20".join(s.split())
     s = s.replace("{", r"\{")
     s = s.replace("}", r"\}")
@@ -46,7 +46,10 @@ def to_shell_html(s: str) -> str:
 
 def main():
     # get config
-    cfgfile = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.ini")
+    cfgfile = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "config.ini"
+    )
     cfgparser = ConfigParser()
     cfgparser.read(cfgfile)
 
@@ -78,7 +81,9 @@ def main():
     session.trust_env = False  # do not use proxy setting in env
 
     if proxy is not None:
-        response = session.get(url_login, proxies={"http": proxy, "https": proxy})
+        response = session.get(url_login, proxies={
+                               "http": proxy, "https": proxy
+                               })
     else:
         response = session.get(url_login, proxies={})
 
@@ -104,7 +109,8 @@ def main():
     # apply
     data = next(x for x in content["data"] if x.get("TJSJ") != "")
     data["WID"] = content["data"][0]["WID"]
-    fields = ["WID", "CURR_LOCATION", "IS_TWZC", "IS_HAS_JKQK", "JRSKMYS", "JZRJRSKMYS"]
+    fields = ["WID", "CURR_LOCATION", "IS_TWZC",
+              "IS_HAS_JKQK", "JRSKMYS", "JZRJRSKMYS"]
 
     if location is not None:
         data["CURR_LOCATION"] = location
@@ -123,7 +129,7 @@ def main():
         answer = f"Checkin failed with status code {result.status_code}"
 
     if "TO_HTML" in os.environ:
-        answer = to_shell_html(answer)
+        answer = to_shell_urltext(answer)
 
     print(answer)
 
