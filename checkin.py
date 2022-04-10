@@ -108,9 +108,18 @@ def main():
 
     # apply
     data = next(x for x in content["data"] if x.get("TJSJ") != "")
+
     data["WID"] = content["data"][0]["WID"]
-    fields = ["WID", "CURR_LOCATION", "IS_TWZC",
-              "IS_HAS_JKQK", "JRSKMYS", "JZRJRSKMYS"]
+    fields = [
+        "WID",
+        "CURR_LOCATION",
+        "IS_TWZC",  # 体温正常
+        "IS_HAS_JKQK",  # 健康情况
+        "JRSKMYS",  # 今日苏康码颜色
+        "JZRJRSKMYS",  # 居住人今日苏康码颜色
+        "SFZJLN",  # 是否最近离宁
+        "ZJHSJCSJ"  # 最近核酸检测时间
+    ]
 
     if location is not None:
         data["CURR_LOCATION"] = location
