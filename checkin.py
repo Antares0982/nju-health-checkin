@@ -1,40 +1,18 @@
 #!/usr/bin/env python3
-"""
+'''
 File: checkin.py
 Project: nju-health-checkin
-Author: Maxwell Lyu https://github.com/Maxwell-Lyu
------
-Last Modified: Tuesday, 28th December 2021 3:53:25 pm
-Modified By: Antares (antares0982@gmail.com)
------
-Copyright (C) 2021 Maxwell Lyu
-"""
+Created Date: Sunday, April 17th 2022, 4:12:13 pm
+Author: antares0982@gmail.com
+Copyright (c) 2022 Antares
+'''
 
-import base64
+
 import json
 import os
-import random
 from configparser import ConfigParser
 
 import requests
-from bs4 import BeautifulSoup
-from Crypto.Cipher import AES
-from Crypto.Util import Padding
-
-
-def encryptAES(_p0: str, _p1: str) -> str:
-    _chars = list("ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678")
-
-    def _rds(len: int) -> str:
-        return "".join(random.choices(_chars, k=len))
-
-    def _gas(data: str, key0: str, iv0: str) -> bytes:
-        encrypt = AES.new(
-            key0.strip().encode("utf-8"), AES.MODE_CBC, iv0.encode("utf-8")
-        )
-        return base64.b64encode(encrypt.encrypt(Padding.pad(data.encode("utf-8"), 16)))
-
-    return _gas(_rds(64) + _p0, _p1, _rds(16)).decode("utf-8")
 
 
 def to_shell_urltext(s: str) -> str:
@@ -53,8 +31,7 @@ def main():
     cfgparser = ConfigParser()
     cfgparser.read(cfgfile)
 
-    username = cfgparser["check"]["ID"]
-    password = cfgparser["check"]["PASSWD"]
+    cookie = cfgparser["check"]["cookie"]
 
     try:
         location = cfgparser["check"]["location"]
@@ -74,36 +51,14 @@ def main():
     if "https_proxy" in os.environ:
         os.environ.pop("https_proxy")
 
-    # login
-    url_login = r"https://authserver.nju.edu.cn/authserver/login"
     url_list = r"http://ehallapp.nju.edu.cn/xgfw/sys/yqfxmrjkdkappnju/apply/getApplyInfoList.do"
     session = requests.Session()
-    session.trust_env = False  # do not use proxy setting in env
 
-    if proxy is not None:
-        response = session.get(url_login, proxies={
-                               "http": proxy, "https": proxy
-                               })
-    else:
-        response = session.get(url_login, proxies={})
-
-    soup = BeautifulSoup(response.text, "html.parser")
-    soup.select_one("#pwdDefaultEncryptSalt").attrs["value"]
-    data_login = {
-        "username": username,
-        "password": encryptAES(
-            password, soup.select_one("#pwdDefaultEncryptSalt").attrs["value"]
-        ),
-        "lt": soup.select_one('[name="lt"]').attrs["value"],
-        "dllt": "userNamePasswordLogin",
-        "execution": soup.select_one('[name="execution"]').attrs["value"],
-        "_eventId": soup.select_one('[name="_eventId"]').attrs["value"],
-        "rmShown": soup.select_one('[name="rmShown"]').attrs["value"],
-    }
-    session.post(url_login, data_login)
-
-    # get info
-    raw = session.get(url_list)
+    # grep info directly, use cookie
+    raw = session.get(f"https://authserver.nju.edu.cn/authserver/login?service={url_list}", headers={
+        "cookie": cookie,
+        "User-Agent": "Mozilla/5.0 (Linux; Android 10; ONEPLUS A6010 Build/QKQ1.190716.003; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/100.0.4896.88 Mobile Safari/537.36  cpdaily/8.2.7 wisedu/8.2.7",
+    })
     content = raw.json()
 
     # apply
@@ -125,9 +80,12 @@ def main():
         data["CURR_LOCATION"] = location
 
     result = session.get(
-        "http://ehallapp.nju.edu.cn/xgfw/sys/yqfxmrjkdkappnju/apply/saveApplyInfos.do?"
-        + "&".join([key + "=" + data[key] for key in fields])
-    )
+        "http://ehallapp.nju.edu.cn/xgfw/sys/yqfxmrjkdkappnju/apply/saveApplyInfos.do?" +
+        "&".join([key + "=" + data[key] for key in fields]),
+        headers={
+            "cookie": cookie,
+            "User-Agent": "Mozilla/5.0 (Linux; Android 10; ONEPLUS A6010 Build/QKQ1.190716.003; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/100.0.4896.88 Mobile Safari/537.36  cpdaily/8.2.7 wisedu/8.2.7",
+        })
 
     answer = json.loads(result.text)
     answer["location"] = data["CURR_LOCATION"]
