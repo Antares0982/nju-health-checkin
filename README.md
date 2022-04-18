@@ -1,6 +1,6 @@
 # NJU Health Checkin
 
-> NJU daily health checkin, with features of fake locations and tgbot info
+> NJU daily health checkin, with features of fake locations and tgbot info, bypasses CAPTCHA using cookies.
 >
 > Used to be a fork from [forewing/nju-health-checkin](https://github.com/forewing/nju-health-checkin).
 >
@@ -12,7 +12,17 @@
 python3 -m pip install requests
 ```
 
+## Run with Github Actions
+
+If use Github Actions, you need to:
+
+* fork this project.
+* Find `secret` in your project settings, and go to `Actions secrets`, create environment secrets with name `NJU_COOKIE`. If use telegram bot to send info, also create `TELEGRAM_TO` and `TELEGRAM_TOKEN`.
+* Go to `Actions` -> `workflows` -> `Checkin`, run it manually to test if it is working.
+
 ## Run with Crontab
+
+You can also deploy it on your server.
 
 This script provides features of sending checkin info using telegram-bot, and manually specifying fake location. You can feel free to use all of these two features or neither of them.
 

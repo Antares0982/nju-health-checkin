@@ -106,7 +106,7 @@ def main():
     # create session
     session = requests.Session()
     # default not use proxy if the field "proxy" in `config.ini` is not set, even if there is a system proxy.
-    # guess github action blocks connection which has `trust_env = False`. Try fix this
+    # github action blocks connection which has `trust_env = False`.
     if "NJU_COOKIE" not in os.environ:
         session.trust_env = False
     if proxy is not None:
