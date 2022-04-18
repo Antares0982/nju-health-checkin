@@ -96,10 +96,6 @@ def getConfig() -> Tuple[str, Optional[str], Optional[str]]:
     if proxy == "":
         proxy = None
 
-    if "http_proxy" in os.environ:
-        os.environ.pop("http_proxy")
-    if "https_proxy" in os.environ:
-        os.environ.pop("https_proxy")
     return cookie, location, proxy
 
 
@@ -110,7 +106,9 @@ def main():
     # create session
     session = requests.Session()
     # default not use proxy if the field "proxy" in `config.ini` is not set, even if there is a system proxy.
-    session.trust_env = False
+    # guess github action blocks connection which has `trust_env = False`. Try fix this
+    if "NJU_COOKIE" not in os.environ:
+        session.trust_env = False
     if proxy is not None:
         # set manually specified proxy
         session.proxies = {"http": proxy, "https": proxy}
