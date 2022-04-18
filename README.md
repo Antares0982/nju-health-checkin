@@ -1,6 +1,6 @@
-# NJU Health Checkin
+# NJU Health Check-in
 
-> NJU daily health checkin, with features of fake locations and tgbot info, bypasses CAPTCHA using cookies.
+> NJU daily health check-in, with features of fake locations and tgbot info, bypasses CAPTCHA using cookies.
 >
 > Used to be a fork from [forewing/nju-health-checkin](https://github.com/forewing/nju-health-checkin).
 >
@@ -12,24 +12,26 @@
 python3 -m pip install requests
 ```
 
-## Run with Github Actions
+## Run with GitHub Actions
 
-If use Github Actions, you need to:
+If use GitHub Actions, you need to:
 
 * fork this project.
-* Find `secret` in your project settings, and go to `Actions secrets`, create environment secrets with name `NJU_COOKIE`. If use telegram bot to send info, also create `TELEGRAM_TO` and `TELEGRAM_TOKEN`.
+* Go to `Settings` -> `Secrets` -> `Actions`, click `New repository secret`, with name `NJU_COOKIE`. If use telegram bot to send info, also create `TELEGRAM_TO` and `TELEGRAM_TOKEN`.
 * Go to `Actions` -> `workflows` -> `Checkin`, run it manually to test if it is working.
+* Modify the action time in `.github/workflows/checkin.yml` if you don't want to check-in at 9:00 am.
+* Does not support fake location. Action will always use the latest check-in location.
 
-## Run with Crontab
+## Run with crontab
 
 You can also deploy it on your server.
 
-This script provides features of sending checkin info using telegram-bot, and manually specifying fake location. You can feel free to use all of these two features or neither of them.
+This script provides features of sending check-in info using telegram-bot, and manually specifying fake location. You can feel free to use all of these two features or neither of them.
 
 if use telegram bot, `crontab -e` and write:
 
 ```crontab
-0 21 * * * /usr/bin/env http_proxy=url:port https_proxy=url:port bottoken=xxx tgid=yyy bash run.sh # run at 9pm everyday. the http_proxy and https_proxy are for telegram bot
+0 21 * * * /usr/bin/env bottoken=xxx tgid=yyy bash run.sh # run at 9pm everyday. the http_proxy and https_proxy are for telegram bot
 ```
 
 If you don't need to send checkin message via telegram bot, write:
@@ -41,10 +43,10 @@ If you don't need to send checkin message via telegram bot, write:
 Note:
 
 * Complete your own `config.ini` file. You need to complete **cookie** of these two fields: `CASTGC` and `AUTHTGC`. No other fields are needed. DON'T write any other field in config file.
-* If **always use the location in the last checkin**, just left `location` blank. If checkin requests do not use proxy, left `proxy` blank. Otherwise specify the proxy url and port explicitly in `config.ini` (`checkin.py` ignores proxy setting in env!)
+* If **always use the location in the last checkin**, just left `location` blank. If **checkin requests do not use proxy**, left `proxy` blank. Otherwise specify the proxy url and port explicitly in `config.ini` (`checkin.py` ignores proxy setting in env!)
 
 ## Contributions
 
-- Previous: [checkin.py](checkin.py)  by [Maxwell Lyu](https://github.com/Maxwell-Lyu). Rewrite by [Antares](https://github.com/Antares0982).
+- Previous: [checkin.py](checkin.py) by [Maxwell Lyu](https://github.com/Maxwell-Lyu). Rewrite by [Antares](https://github.com/Antares0982).
 
-* `run.sh` by [Antares](https://github.com/Antares0982).
+* `run.sh` and `githubaction.sh` by [Antares](https://github.com/Antares0982).

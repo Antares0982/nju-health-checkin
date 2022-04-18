@@ -5,10 +5,7 @@ on:
     # 9:00 am UTC+8
     - cron:  '0 1 * * *'
   workflow_dispatch:
-    # inputs:
-    #   cookie:
-    #     description: 'NJU Cookie'
-    #     required: true
+    # nothing to input
 
 jobs:
   checkin:
@@ -40,7 +37,6 @@ jobs:
       run: |
         bash githubaction.sh
       env:
-        # NJU_COOKIE: ${{ github.event.inputs.cookie }}
         NJU_COOKIE: ${{ secrets.NJU_COOKIE }}
         TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
         TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
