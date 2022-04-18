@@ -19,9 +19,19 @@ python3 -m pip install requests
 If use GitHub Actions, you need to:
 
 * fork this project.
-* Go to `Settings` -> `Secrets` -> `Actions`, click `New repository secret`, with name `NJU_COOKIE`. If use telegram bot to send info, also create `TELEGRAM_TO` and `TELEGRAM_TOKEN`.
+
+* Go to `Settings` -> `Secrets` -> `Actions`, click `New repository secret`, with name `NJU_COOKIE`. You need to and only need to fill the `CASTGC` and `AUTHTGC` fields with the following format:
+
+  ```
+  CASTGC=XXX-12345-xxxxxxxxxxxxxx-xxxx-xxx; AUTHTGC=XXX-12345-xxxxxxxxxxxxxx-xxxx-xxx
+  ```
+
+* If use telegram bot to send info, also create `TELEGRAM_TO` and `TELEGRAM_TOKEN`.
+
 * Go to `Actions` -> `workflows` -> `Checkin`, run it manually to test if it is working.
+
 * Modify the action time in `.github/workflows/checkin.yml` if you don't want to check-in at 9:00 am.
+
 * Does not support fake location. Action will always use the latest check-in location.
 
 ## Run with crontab
