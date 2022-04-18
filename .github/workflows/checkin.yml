@@ -18,7 +18,7 @@ jobs:
     - name: Install Requirements
       run: |
         python -m pip install -r requirements.txt
-        
+
     - name: Run Script (scheduled)
       id: run_scheduled
       if: ${{ github.event_name == 'schedule' }}
@@ -26,6 +26,8 @@ jobs:
         bash githubaction.sh
       env:
         NJU_COOKIE: ${{ secrets.NJU_COOKIE }}
+        TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
+        TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
 
     - name: Run Script (manually)
       id: run_manually
