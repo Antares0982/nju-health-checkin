@@ -79,7 +79,9 @@ def getConfig() -> Tuple[str, Optional[str], Optional[str]]:
     cfgparser = ConfigParser()
     cfgparser.read(cfgfile)
 
-    cookie = cfgparser["check"]["cookie"]
+    cookie = os.getenv("NJU_COOKIE")
+    if cookie is None:
+        cookie = cfgparser["check"]["cookie"]
 
     try:
         location = cfgparser["check"]["location"]
