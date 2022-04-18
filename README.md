@@ -14,6 +14,8 @@ python3 -m pip install requests
 
 ## Run with GitHub Actions
 
+> GitHub Action is not stable! Check-in may fail with high possibility.
+
 If use GitHub Actions, you need to:
 
 * fork this project.
