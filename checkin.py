@@ -126,6 +126,7 @@ def main():
         headers={
             "cookie": cookie,
             "User-Agent": "Mozilla/5.0 (Linux; Android 10; ONEPLUS A6010 Build/QKQ1.190716.003; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/100.0.4896.88 Mobile Safari/537.36  cpdaily/8.2.7 wisedu/8.2.7",
+            "referer": "http://ehallapp.nju.edu.cn/xgfw/sys/mrjkdkappnju/index.html"
         })
 
     answer = json.loads(result.text)
