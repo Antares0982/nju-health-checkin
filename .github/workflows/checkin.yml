@@ -4,8 +4,11 @@ on:
   schedule:
     # 9:00 am UTC+8
     - cron:  '0 1 * * *'
+    branches:
+      - 'master'
   workflow_dispatch:
-    # nothing to input
+    branches:
+      - 'master'
 
 jobs:
   checkin:
