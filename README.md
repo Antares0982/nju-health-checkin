@@ -20,10 +20,10 @@ If use GitHub Actions, you need to:
 
 * fork this project.
 
-* Go to `Settings` -> `Secrets` -> `Actions`, click `New repository secret`, with name `NJU_COOKIE`. You need to and only need to fill the `CASTGC` and `AUTHTGC` fields with the following format:
+* Go to `Settings` -> `Secrets` -> `Actions`, click `New repository secret`, with name `NJU_COOKIE`. You need to and only need to fill in the `CASTGC` field with the following format:
 
   ```
-  CASTGC=XXX-12345-xxxxxxxxxxxxxx-xxxx-xxx; AUTHTGC=XXX-12345-xxxxxxxxxxxxxx-xxxx-xxx
+  XXX-12345-xxxxxxxxxxxxxx-xxxx-xxx
   ```
 
 * If use telegram bot to send info, also create `TELEGRAM_TO` and `TELEGRAM_TOKEN`.
@@ -54,7 +54,7 @@ If you don't need to send checkin message via telegram bot, write:
 
 Note:
 
-* Complete your own `config.ini` file. You need to complete **cookie** of these two fields: `CASTGC` and `AUTHTGC`. No other fields are needed. DON'T write any other field in config file.
+* Complete your own `config.ini` file. You need to write **cookie** of field `CASTGC`. No other fields are needed. 
 * If **always use the location in the last checkin**, just left `location` blank. If **checkin requests do not use proxy**, left `proxy` blank. Otherwise specify the proxy url and port explicitly in `config.ini` (`checkin.py` ignores proxy setting in env!)
 
 ## Contributions

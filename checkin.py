@@ -81,7 +81,7 @@ def getConfig() -> Tuple[str, Optional[str], Optional[str]]:
 
     cookie = os.getenv("NJU_COOKIE")
     if cookie is None:
-        cookie = cfgparser["check"]["cookie"]
+        cookie = cfgparser["check"]["CASTGC"]
 
     try:
         location = cfgparser["check"]["location"]
@@ -96,6 +96,8 @@ def getConfig() -> Tuple[str, Optional[str], Optional[str]]:
     if proxy == "":
         proxy = None
 
+    cookie = "CASTGC="+cookie+"; AUTHTGC="+cookie
+
     return cookie, location, proxy
 
 
@@ -106,7 +108,7 @@ def main():
     # create session
     session = requests.Session()
     # default not use proxy if the field "proxy" in `config.ini` is not set, even if there is a system proxy.
-    # github action blocks connection which has `trust_env = False`.
+    # maybe github action blocks connection which has `trust_env = False`.
     if "NJU_COOKIE" not in os.environ:
         session.trust_env = False
     if proxy is not None:
