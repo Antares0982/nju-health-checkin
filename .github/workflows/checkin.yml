@@ -1,14 +1,13 @@
 name: Checkin
 
 on:
+  push:
+    branches:
+      - master
   schedule:
     # 9:00 am UTC+8
     - cron:  '0 1 * * *'
-    branches:
-      - 'master'
   workflow_dispatch:
-    branches:
-      - 'master'
 
 jobs:
   checkin:
