@@ -1,10 +1,8 @@
 #!/bin/bash
 
-set -e
-
 shell_dir=$(dirname $(readlink -f "$0"))
 
-RESULT=$(TO_HTML=1 python3 $shell_dir/checkin.py)
+RESULT=$(TO_HTML=1 python3 $shell_dir/checkin.py 2>&1)
 
 echo "$RESULT"
 
