@@ -8,6 +8,7 @@ Copyright (c) 2022 Antares
 '''
 
 
+from datetime import datetime, timedelta
 import json
 import os
 from configparser import ConfigParser
@@ -25,6 +26,22 @@ FIELDS = [
     "SFZJLN",  # 是否最近离宁
     "ZJHSJCSJ"  # 最近核酸检测时间
 ]
+
+
+def time_gen():
+    """生成上一个周一的时间"""
+    t = datetime.now()
+
+    if t.hour != 14:
+        t -= timedelta(hours=t.hour-14)
+
+    w = t.weekday()
+    if w != 0:
+        t -= timedelta(days=w)
+    else:
+        t -= timedelta(days=7)
+
+    return t.isoformat(' ', 'hours')
 
 
 def to_shell_urltext(s: str) -> str:
@@ -67,6 +84,8 @@ def grepLastCheckinInfo(cookie: str, location: Optional[str] = None) -> Dict[str
     data["WID"] = content["data"][0]["WID"]
     if location is not None:
         data["CURR_LOCATION"] = location
+
+    data["ZJHSJCSJ"] = time_gen()
 
     return data
 
