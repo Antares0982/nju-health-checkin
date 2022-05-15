@@ -52,10 +52,10 @@ def getTempAuth(session: requests.Session, cookie: str) -> str:
 
 def grepLastCheckinInfo(cookie: str, location: Optional[str] = None) -> Dict[str, str]:
     session = requests.Session()
-    url_list = r"http://ehallapp.nju.edu.cn/xgfw/sys/yqfxmrjkdkappnju/apply/getApplyInfoList.do"
-    # grep info directly, use cookie
-    raw = session.get(f"https://authserver.nju.edu.cn/authserver/login?service={url_list}", headers={
+
+    raw = session.get("http://ehallapp.nju.edu.cn/xgfw/sys/yqfxmrjkdkappnju/apply/getApplyInfoList.do", headers={
         "cookie": cookie,
+        "referer": "http://ehallapp.nju.edu.cn/xgfw/sys/mrjkdkappnju/index.html",
         "User-Agent": "Mozilla/5.0 (Linux; Android 10; ONEPLUS A6010 Build/QKQ1.190716.003; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/100.0.4896.88 Mobile Safari/537.36  cpdaily/8.2.7 wisedu/8.2.7",
     })
 
@@ -115,11 +115,11 @@ def main():
         # set manually specified proxy
         session.proxies = {"http": proxy, "https": proxy}
 
-    # get the data in last checkin
-    data = grepLastCheckinInfo(cookie, location)
-
     # get temporary auth cookie MOD_AUTH_CAS
     cookie += "; "+getTempAuth(session, cookie)
+
+    # get the data in last checkin
+    data = grepLastCheckinInfo(cookie, location)
 
     # apply
     result = session.get(
