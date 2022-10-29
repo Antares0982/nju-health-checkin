@@ -67,8 +67,10 @@ def getTempAuth(session: requests.Session, cookie: str) -> str:
     return "; ".join(ans)
 
 
-def grepLastCheckinInfo(cookie: str, location: Optional[str] = None) -> Dict[str, str]:
+def grepLastCheckinInfo(cookie: str, location: Optional[str] = None,  trustEnv: bool = False) -> Dict[str, str]:
     session = requests.Session()
+
+    session.trust_env = trustEnv
 
     raw = session.get("http://ehallapp.nju.edu.cn/xgfw/sys/yqfxmrjkdkappnju/apply/getApplyInfoList.do", headers={
         "cookie": cookie,
@@ -138,7 +140,7 @@ def main():
     cookie += "; "+getTempAuth(session, cookie)
 
     # get the data in last checkin
-    data = grepLastCheckinInfo(cookie, location)
+    data = grepLastCheckinInfo(cookie, location, session.trust_env)
 
     # apply
     result = session.get(
