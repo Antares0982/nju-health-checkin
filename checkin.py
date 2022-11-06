@@ -28,8 +28,22 @@ FIELDS = [
 ]
 
 
+def session_gen(proxy: Optional[str]):
+    """创建一个session对象."""
+    session = requests.Session()
+    # not use proxy by default if the field "proxy" in `config.ini` is not set, even if there is a system proxy.
+    # note that, maybe github action blocks connections with `trust_env = False`.
+    # So if use `NJU_COOKIE` in env, we assume that it is running in github action and `trust_env` is true.
+    if "NJU_COOKIE" not in os.environ:
+        session.trust_env = False
+    if proxy is not None:
+        # set manually specified proxy
+        session.proxies = {"http": proxy, "https": proxy}
+    return session
+
+
 def time_gen():
-    """生成上一个下午两点的时间"""
+    """生成最近的下午两点的时间用于填报."""
     t = datetime.now()
 
     if t.hour != 14:
@@ -64,10 +78,8 @@ def getTempAuth(session: requests.Session, cookie: str) -> str:
     return "; ".join(ans)
 
 
-def grepLastCheckinInfo(cookie: str, location: Optional[str] = None,  trustEnv: bool = False) -> Dict[str, str]:
-    session = requests.Session()
-
-    session.trust_env = trustEnv
+def grepLastCheckinInfo(cookie: str, location: Optional[str] = None,  proxy: Optional[str] = None) -> Dict[str, str]:
+    session = session_gen(proxy)
 
     raw = session.get("http://ehallapp.nju.edu.cn/xgfw/sys/yqfxmrjkdkappnju/apply/getApplyInfoList.do", headers={
         "cookie": cookie,
@@ -124,20 +136,13 @@ def main():
     cookie, location, proxy = getConfig()
 
     # create session
-    session = requests.Session()
-    # default not use proxy if the field "proxy" in `config.ini` is not set, even if there is a system proxy.
-    # maybe github action blocks connection which has `trust_env = False`.
-    if "NJU_COOKIE" not in os.environ:
-        session.trust_env = False
-    if proxy is not None:
-        # set manually specified proxy
-        session.proxies = {"http": proxy, "https": proxy}
+    session = session_gen(proxy)
 
     # get temporary auth cookie MOD_AUTH_CAS
     cookie += "; "+getTempAuth(session, cookie)
 
     # get the data in last checkin
-    data = grepLastCheckinInfo(cookie, location, session.trust_env)
+    data = grepLastCheckinInfo(cookie, location, proxy)
 
     # apply
     result = session.get(
