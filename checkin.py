@@ -29,17 +29,14 @@ FIELDS = [
 
 
 def time_gen():
-    """生成上一个周一的时间"""
+    """生成上一个下午两点的时间"""
     t = datetime.now()
 
     if t.hour != 14:
         t -= timedelta(hours=t.hour-14)
 
-    w = t.weekday()
-    if w != 0:
-        t -= timedelta(days=w)
-    else:
-        t -= timedelta(days=7)
+    if t > datetime.now():
+        t -= timedelta(days=1)
 
     return t.isoformat(' ', 'hours')
 
